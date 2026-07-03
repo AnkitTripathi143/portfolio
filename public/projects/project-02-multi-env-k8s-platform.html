@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PROJECT 02 — Multi-Environment Kubernetes Platform</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#0a1128;
+    --panel:#101a3a;
+    --line:#25335f;
+    --blue:#5b8dff;
+    --cyan:#38e1ff;
+    --violet:#a78bfa;
+    --text:#dfe6ff;
+    --dim:#7c88b8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(91,141,255,0.18), transparent 45%),
+      radial-gradient(circle at 90% 20%, rgba(56,225,255,0.10), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    padding:40px 24px 80px;
+  }
+  .wrap{max-width:1200px; margin:0 auto;}
+  .eyebrow{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    color:var(--cyan);
+    font-size:13px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(28px,4vw,44px);
+    margin:8px 0 4px;
+    color:#fff;
+    font-weight:700;
+  }
+  .sub{color:var(--dim); font-size:14.5px; margin-bottom:36px;}
+  .sub b{color:var(--blue); font-weight:600;}
+
+  .env-row{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;}
+  .env-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px; position:relative;
+  }
+  .env-card.dev{border-top:3px solid #5b8dff;}
+  .env-card.stg{border-top:3px solid #a78bfa;}
+  .env-card.prod{border-top:3px solid #38e1ff;}
+  .env-card h3{font-family:'Space Grotesk',sans-serif; margin:0 0 6px; font-size:16px; color:#fff;}
+  .env-card p{font-size:12px; color:var(--dim); margin:0 0 10px; line-height:1.5;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px;}
+  .tags span{
+    font-size:10.5px; padding:3px 9px; border-radius:20px; border:1px solid var(--line); color:var(--text); background:rgba(255,255,255,0.03);
+  }
+
+  .board{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:36px;
+  }
+  .board h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14px;
+    color:var(--cyan);
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin:0 0 8px;
+  }
+  .board .cap{color:var(--dim); font-size:12.5px; margin-bottom:26px;}
+
+  svg{width:100%; height:auto; display:block;}
+  .lbl{font-family:'Inter', sans-serif; fill:var(--text); font-size:12px;}
+  .lbl-b{font-family:'Space Grotesk', sans-serif; fill:#fff; font-size:13px; font-weight:600;}
+  .lbl-dim{font-family:'Inter', sans-serif; fill:var(--dim); font-size:10px;}
+  .hex{fill:#0c1631; stroke:var(--line); stroke-width:1.4;}
+  .hex-dev{stroke:#5b8dff;}
+  .hex-stg{stroke:#a78bfa;}
+  .hex-prod{stroke:#38e1ff;}
+  .core{fill:rgba(56,225,255,0.06); stroke:#38e1ff; stroke-width:1.6;}
+  .flow{stroke:#5b8dff; stroke-width:1.6; fill:none; marker-end:url(#arrow);}
+  .flow-sync{stroke:#38e1ff; stroke-width:1.4; fill:none; marker-end:url(#arrowc); stroke-dasharray:5 4;}
+  .boundary{fill:none; stroke:var(--line); stroke-width:1; stroke-dasharray:3 3;}
+
+  .legend{display:flex; flex-wrap:wrap; gap:22px; margin-top:24px; font-size:11.5px; color:var(--dim);}
+  .legend span{display:inline-flex; align-items:center; gap:7px;}
+  .dot{width:10px; height:10px; border-radius:3px; display:inline-block;}
+
+  .strip{margin-top:26px; display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
+  .metric{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .metric .k{font-family:'Space Grotesk',sans-serif; color:var(--cyan); font-size:21px; font-weight:700;}
+  .metric .d{font-size:11.5px; color:var(--dim); margin-top:3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Platform Engineering</div>
+  <h1>PROJECT 02 — Multi-Environment Kubernetes Platform</h1>
+  <div class="sub">Platform Engineering · <b>GitOps with ArgoCD</b> · Multi-Tenant EKS</div>
+
+  <div class="env-row">
+    <div class="env-card dev">
+      <h3>dev</h3>
+      <p>Auto-sync on every merge to `develop`. Relaxed quotas, shared namespace per team.</p>
+      <div class="tags"><span>auto-sync</span><span>self-heal</span><span>low quota</span></div>
+    </div>
+    <div class="env-card stg">
+      <h3>staging</h3>
+      <p>Auto-sync from `release/*` branches. Mirrors prod topology at reduced scale.</p>
+      <div class="tags"><span>auto-sync</span><span>prod-parity</span><span>synthetic data</span></div>
+    </div>
+    <div class="env-card prod">
+      <h3>production</h3>
+      <p>Manual promotion + approval gate. Strict resource quotas, network policy enforced.</p>
+      <div class="tags"><span>manual sync</span><span>RBAC-locked</span><span>quota-enforced</span></div>
+    </div>
+  </div>
+
+  <div class="board">
+    <h2>GitOps Control Plane Topology</h2>
+    <div class="cap">One Git repo of record → ArgoCD reconciles desired state into three isolated EKS clusters, each multi-tenant by namespace.</div>
+
+    <svg viewBox="0 0 1160 640" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5b8dff"/></marker>
+        <marker id="arrowc" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#38e1ff"/></marker>
+      </defs>
+
+      <!-- Git repo of record -->
+      <rect x="30" y="270" width="170" height="90" rx="10" class="core"/>
+      <text x="115" y="300" text-anchor="middle" class="lbl-b">Git Repo of Record</text>
+      <text x="115" y="318" text-anchor="middle" class="lbl-dim">Helm charts + Kustomize</text>
+      <text x="115" y="334" text-anchor="middle" class="lbl-dim">overlays: dev / stg / prod</text>
+
+      <!-- Engineers -->
+      <rect x="30" y="130" width="170" height="60" rx="10" class="hex"/>
+      <text x="115" y="155" text-anchor="middle" class="lbl-b">Engineers</text>
+      <text x="115" y="172" text-anchor="middle" class="lbl-dim">PR → app manifests</text>
+      <line x1="115" y1="190" x2="115" y2="270" class="flow"/>
+
+      <!-- ArgoCD core -->
+      <rect x="260" y="255" width="200" height="120" rx="12" class="core"/>
+      <text x="360" y="285" text-anchor="middle" class="lbl-b">ArgoCD Control Plane</text>
+      <text x="360" y="303" text-anchor="middle" class="lbl-dim">App-of-Apps pattern</text>
+      <text x="360" y="319" text-anchor="middle" class="lbl-dim">continuous diff + reconcile</text>
+      <text x="360" y="335" text-anchor="middle" class="lbl-dim">RBAC via SSO groups</text>
+      <line x1="200" y1="315" x2="260" y2="315" class="flow"/>
+
+      <!-- three sync lines to clusters -->
+      <path d="M460,290 C 560,180 650,150 720,150" class="flow-sync"/>
+      <path d="M460,315 L720,315" class="flow-sync"/>
+      <path d="M460,340 C 560,450 650,480 720,480" class="flow-sync"/>
+
+      <!-- DEV cluster hex group -->
+      <rect x="720" y="60" width="410" height="180" rx="14" class="hex hex-dev" fill="rgba(91,141,255,0.05)"/>
+      <text x="740" y="88" class="lbl-b">EKS — dev cluster</text>
+      <rect x="740" y="102" width="120" height="50" rx="8" class="hex hex-dev"/>
+      <text x="800" y="122" text-anchor="middle" class="lbl">ns: team-a</text>
+      <text x="800" y="138" text-anchor="middle" class="lbl-dim">quota: 2 vCPU</text>
+      <rect x="870" y="102" width="120" height="50" rx="8" class="hex hex-dev"/>
+      <text x="930" y="122" text-anchor="middle" class="lbl">ns: team-b</text>
+      <text x="930" y="138" text-anchor="middle" class="lbl-dim">quota: 2 vCPU</text>
+      <rect x="1000" y="102" width="120" height="50" rx="8" class="hex hex-dev"/>
+      <text x="1060" y="122" text-anchor="middle" class="lbl">ns: platform</text>
+      <text x="1060" y="138" text-anchor="middle" class="lbl-dim">shared tooling</text>
+      <rect x="740" y="168" width="380" height="55" rx="8" class="hex hex-dev"/>
+      <text x="930" y="190" text-anchor="middle" class="lbl">RBAC: dev-team-* (namespace-scoped edit)</text>
+      <text x="930" y="206" text-anchor="middle" class="lbl-dim">NetworkPolicy: open intra-namespace</text>
+
+      <!-- STAGING cluster -->
+      <rect x="720" y="260" width="410" height="130" rx="14" class="hex hex-stg" fill="rgba(167,139,250,0.05)"/>
+      <text x="740" y="288" class="lbl-b">EKS — staging cluster</text>
+      <rect x="740" y="302" width="180" height="50" rx="8" class="hex hex-stg"/>
+      <text x="830" y="322" text-anchor="middle" class="lbl">ns: app-staging</text>
+      <text x="830" y="338" text-anchor="middle" class="lbl-dim">prod-parity sizing</text>
+      <rect x="940" y="302" width="180" height="50" rx="8" class="hex hex-stg"/>
+      <text x="1030" y="322" text-anchor="middle" class="lbl">ns: perf-testing</text>
+      <text x="1030" y="338" text-anchor="middle" class="lbl-dim">load-gen jobs</text>
+
+      <!-- PROD cluster -->
+      <rect x="720" y="410" width="410" height="180" rx="14" class="hex hex-prod" fill="rgba(56,225,255,0.05)"/>
+      <text x="740" y="438" class="lbl-b">EKS — production cluster</text>
+      <rect x="740" y="452" width="120" height="50" rx="8" class="hex hex-prod"/>
+      <text x="800" y="472" text-anchor="middle" class="lbl">ns: app-prod</text>
+      <text x="800" y="488" text-anchor="middle" class="lbl-dim">HPA + PDB</text>
+      <rect x="870" y="452" width="120" height="50" rx="8" class="hex hex-prod"/>
+      <text x="930" y="472" text-anchor="middle" class="lbl">ns: data</text>
+      <text x="930" y="488" text-anchor="middle" class="lbl-dim">stateful sets</text>
+      <rect x="1000" y="452" width="120" height="50" rx="8" class="hex hex-prod"/>
+      <text x="1060" y="472" text-anchor="middle" class="lbl">ns: ingress</text>
+      <text x="1060" y="488" text-anchor="middle" class="lbl-dim">shared ALB ctrl</text>
+      <rect x="740" y="518" width="380" height="55" rx="8" class="hex hex-prod"/>
+      <text x="930" y="540" text-anchor="middle" class="lbl">RBAC: sre-oncall (cluster-admin), app-team (read + PR only)</text>
+      <text x="930" y="556" text-anchor="middle" class="lbl-dim">NetworkPolicy: default-deny, explicit allow-lists</text>
+
+      <!-- Approval gate for prod -->
+      <rect x="500" y="470" width="150" height="55" rx="10" class="hex" stroke="#a78bfa"/>
+      <text x="575" y="492" text-anchor="middle" class="lbl">Manual Approval</text>
+      <text x="575" y="508" text-anchor="middle" class="lbl-dim">release manager sign-off</text>
+      <path d="M460,340 L500,497" class="flow-sync"/>
+      <path d="M650,497 L720,480" class="flow-sync"/>
+
+      <!-- Shared platform services -->
+      <rect x="30" y="410" width="640" height="180" rx="14" class="hex"/>
+      <text x="50" y="438" class="lbl-b">Shared Platform Services (cross-cluster)</text>
+      <rect x="50" y="452" width="140" height="50" rx="8" class="hex"/>
+      <text x="120" y="472" text-anchor="middle" class="lbl">Cert-Manager</text>
+      <text x="120" y="488" text-anchor="middle" class="lbl-dim">auto TLS renewal</text>
+      <rect x="200" y="452" width="140" height="50" rx="8" class="hex"/>
+      <text x="270" y="472" text-anchor="middle" class="lbl">External-DNS</text>
+      <text x="270" y="488" text-anchor="middle" class="lbl-dim">Route53 sync</text>
+      <rect x="350" y="452" width="140" height="50" rx="8" class="hex"/>
+      <text x="420" y="472" text-anchor="middle" class="lbl">OPA Gatekeeper</text>
+      <text x="420" y="488" text-anchor="middle" class="lbl-dim">policy admission</text>
+      <rect x="500" y="452" width="150" height="50" rx="8" class="hex"/>
+      <text x="575" y="472" text-anchor="middle" class="lbl">Karpenter</text>
+      <text x="575" y="488" text-anchor="middle" class="lbl-dim">node autoscaling</text>
+      <rect x="50" y="518" width="600" height="52" rx="8" class="hex"/>
+      <text x="350" y="539" text-anchor="middle" class="lbl">Central IAM Identity Center — SSO groups mapped to ArgoCD RBAC + K8s RBAC per cluster</text>
+      <text x="350" y="555" text-anchor="middle" class="lbl-dim">one identity source, three enforcement points</text>
+    </svg>
+
+    <div class="legend">
+      <span><i class="dot" style="background:#5b8dff"></i>Git → ArgoCD ingestion</span>
+      <span><i class="dot" style="background:#38e1ff"></i>reconcile / sync to cluster</span>
+      <span><i class="dot" style="background:transparent;border:1px dashed #25335f"></i>cluster / tenant boundary</span>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="metric"><div class="k">3</div><div class="d">isolated EKS clusters, one control plane</div></div>
+    <div class="metric"><div class="k">1</div><div class="d">Git repo of record, drift auto-corrected</div></div>
+    <div class="metric"><div class="k">&lt;30s</div><div class="d">avg. drift detection to reconcile</div></div>
+    <div class="metric"><div class="k">Namespace</div><div class="d">tenant isolation with quota + NetPol</div></div>
+  </div>
+</div>
+</body>
+</html>

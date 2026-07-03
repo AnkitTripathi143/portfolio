@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PROJECT 03 — Full-Stack Observability Platform</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Roboto+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#0d1117;
+    --panel:#141b24;
+    --line:#232d3a;
+    --lime:#c6ff5e;
+    --amber:#ffcc66;
+    --pink:#ff6fae;
+    --blue:#63c7ff;
+    --text:#e7edf3;
+    --dim:#7b8a9a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Manrope', sans-serif; padding:40px 24px 80px;
+  }
+  .wrap{max-width:1220px; margin:0 auto;}
+  .eyebrow{font-family:'Roboto Mono',monospace; color:var(--lime); font-size:12.5px; letter-spacing:3px;}
+  h1{font-size:clamp(28px,4vw,44px); margin:8px 0 4px; font-weight:800; color:#fff;}
+  .sub{color:var(--dim); font-size:14.5px; margin-bottom:34px;}
+  .sub b{color:var(--blue);}
+
+  .kpi-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px;}
+  .kpi{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .kpi .label{font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:1px;}
+  .kpi .val{font-family:'Roboto Mono',monospace; font-size:24px; font-weight:700; margin-top:4px;}
+  .kpi.ok .val{color:var(--lime);}
+  .kpi.warn .val{color:var(--amber);}
+  .kpi svg{width:100%; height:28px; margin-top:8px; display:block;}
+
+  .board{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:36px;}
+  .board h2{font-family:'Roboto Mono',monospace; font-size:13px; color:var(--lime); letter-spacing:2px; text-transform:uppercase; margin:0 0 8px;}
+  .board .cap{color:var(--dim); font-size:12.5px; margin-bottom:26px;}
+
+  svg.main{width:100%; height:auto; display:block;}
+  .lbl{font-family:'Manrope',sans-serif; fill:var(--text); font-size:12px;}
+  .lbl-b{font-family:'Manrope',sans-serif; fill:#fff; font-size:13px; font-weight:700;}
+  .lbl-dim{font-family:'Roboto Mono',monospace; fill:var(--dim); font-size:10px;}
+  .box{fill:#101720; stroke:var(--line); stroke-width:1.3;}
+  .box-m{stroke:var(--lime);}
+  .box-l{stroke:var(--blue);}
+  .box-t{stroke:var(--pink);}
+  .box-a{stroke:var(--amber);}
+  .flow{stroke:#3b4a5c; stroke-width:1.5; fill:none; marker-end:url(#arrow);}
+  .flow-m{stroke:var(--lime); stroke-width:1.6; fill:none; marker-end:url(#arrowm);}
+  .flow-l{stroke:var(--blue); stroke-width:1.6; fill:none; marker-end:url(#arrowl);}
+  .flow-t{stroke:var(--pink); stroke-width:1.6; fill:none; marker-end:url(#arrowt);}
+  .flow-a{stroke:var(--amber); stroke-width:1.6; fill:none; stroke-dasharray:4 3; marker-end:url(#arrowa);}
+  .boundary{fill:none; stroke:var(--line); stroke-width:1; stroke-dasharray:3 3;}
+
+  .legend{display:flex; flex-wrap:wrap; gap:22px; margin-top:24px; font-size:11.5px; color:var(--dim);}
+  .legend span{display:inline-flex; align-items:center; gap:7px;}
+  .dot{width:10px; height:3px; display:inline-block; border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">TELEMETRY // ALL SIGNALS NOMINAL</div>
+  <h1>PROJECT 03 — Full-Stack Observability Platform</h1>
+  <div class="sub">Metrics · Logs · Traces · <b>SLO Dashboards</b> · Alerting</div>
+
+  <div class="kpi-row">
+    <div class="kpi ok"><div class="label">SLO — API availability</div><div class="val">99.97%</div>
+      <svg viewBox="0 0 100 28"><polyline points="0,20 15,18 30,21 45,10 60,14 75,8 90,12 100,9" fill="none" stroke="#c6ff5e" stroke-width="2"/></svg>
+    </div>
+    <div class="kpi"><div class="label">P99 latency</div><div class="val">184ms</div>
+      <svg viewBox="0 0 100 28"><polyline points="0,15 15,17 30,12 45,19 60,11 75,16 90,10 100,13" fill="none" stroke="#63c7ff" stroke-width="2"/></svg>
+    </div>
+    <div class="kpi warn"><div class="label">Error budget burn</div><div class="val">38%</div>
+      <svg viewBox="0 0 100 28"><polyline points="0,24 15,20 30,17 45,15 60,10 75,8 90,6 100,4" fill="none" stroke="#ffcc66" stroke-width="2"/></svg>
+    </div>
+    <div class="kpi"><div class="label">Active alerts</div><div class="val">2</div>
+      <svg viewBox="0 0 100 28"><rect x="4" y="10" width="8" height="14" fill="#3b4a5c"/><rect x="18" y="4" width="8" height="20" fill="#ff6fae"/><rect x="32" y="14" width="8" height="10" fill="#3b4a5c"/><rect x="46" y="16" width="8" height="8" fill="#3b4a5c"/><rect x="60" y="6" width="8" height="18" fill="#ff6fae"/><rect x="74" y="12" width="8" height="12" fill="#3b4a5c"/></svg>
+    </div>
+  </div>
+
+  <div class="board">
+    <h2>Signal Pipeline — Instrumentation to Dashboard</h2>
+    <div class="cap">Every service emits metrics, logs, and traces through a single OpenTelemetry Collector; each signal fans out to its purpose-built backend, then converges into Grafana.</div>
+
+    <svg class="main" viewBox="0 0 1180 660" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3b4a5c"/></marker>
+        <marker id="arrowm" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c6ff5e"/></marker>
+        <marker id="arrowl" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#63c7ff"/></marker>
+        <marker id="arrowt" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff6fae"/></marker>
+        <marker id="arrowa" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ffcc66"/></marker>
+      </defs>
+
+      <!-- Services -->
+      <rect x="20" y="40" width="200" height="200" rx="12" class="box"/>
+      <text x="35" y="65" class="lbl-b">Instrumented Services</text>
+      <rect x="40" y="80" width="160" height="40" rx="6" class="box"/>
+      <text x="120" y="105" text-anchor="middle" class="lbl">Java / Spring apps</text>
+      <rect x="40" y="130" width="160" height="40" rx="6" class="box"/>
+      <text x="120" y="155" text-anchor="middle" class="lbl">Node.js APIs</text>
+      <rect x="40" y="180" width="160" height="40" rx="6" class="box"/>
+      <text x="120" y="205" text-anchor="middle" class="lbl">K8s system pods</text>
+      <text x="120" y="235" text-anchor="middle" class="lbl-dim">OTel SDK auto-instrumentation</text>
+
+      <!-- OTel Collector -->
+      <rect x="280" y="90" width="180" height="110" rx="12" class="box box-m"/>
+      <text x="370" y="120" text-anchor="middle" class="lbl-b">OTel Collector</text>
+      <text x="370" y="138" text-anchor="middle" class="lbl-dim">DaemonSet + Gateway</text>
+      <text x="370" y="154" text-anchor="middle" class="lbl-dim">batch · sample · redact PII</text>
+      <text x="370" y="172" text-anchor="middle" class="lbl-dim">fan-out by signal type</text>
+      <path d="M220,140 L280,140" class="flow"/>
+
+      <!-- three signal branches -->
+      <path d="M460,110 C 540,60 600,60 660,60" class="flow-m"/>
+      <path d="M460,145 L660,145" class="flow-l"/>
+      <path d="M460,180 C 540,240 600,240 660,240" class="flow-t"/>
+
+      <!-- Metrics backend -->
+      <rect x="660" y="20" width="200" height="90" rx="10" class="box box-m"/>
+      <text x="760" y="46" text-anchor="middle" class="lbl-b">Prometheus</text>
+      <text x="760" y="64" text-anchor="middle" class="lbl-dim">metrics TSDB, 15d retention</text>
+      <text x="760" y="80" text-anchor="middle" class="lbl-dim">remote_write → Thanos (1y)</text>
+      <text x="760" y="96" text-anchor="middle" class="lbl-dim">recording + alert rules</text>
+
+      <!-- Logs backend -->
+      <rect x="660" y="120" width="200" height="90" rx="10" class="box box-l"/>
+      <text x="760" y="146" text-anchor="middle" class="lbl-b">Loki</text>
+      <text x="760" y="164" text-anchor="middle" class="lbl-dim">log aggregation, label-indexed</text>
+      <text x="760" y="180" text-anchor="middle" class="lbl-dim">S3-backed chunks</text>
+      <text x="760" y="196" text-anchor="middle" class="lbl-dim">LogQL queries</text>
+
+      <!-- Traces backend -->
+      <rect x="660" y="220" width="200" height="90" rx="10" class="box box-t"/>
+      <text x="760" y="246" text-anchor="middle" class="lbl-b">Tempo</text>
+      <text x="760" y="264" text-anchor="middle" class="lbl-dim">distributed traces</text>
+      <text x="760" y="280" text-anchor="middle" class="lbl-dim">trace-to-log-to-metric links</text>
+      <text x="760" y="296" text-anchor="middle" class="lbl-dim">S3-backed storage</text>
+
+      <!-- Grafana -->
+      <rect x="930" y="90" width="220" height="130" rx="12" class="box" stroke="#fff" stroke-width="1.4"/>
+      <text x="1040" y="118" text-anchor="middle" class="lbl-b">Grafana</text>
+      <text x="1040" y="138" text-anchor="middle" class="lbl-dim">unified query layer</text>
+      <text x="1040" y="154" text-anchor="middle" class="lbl-dim">SLO burn-rate dashboards</text>
+      <text x="1040" y="170" text-anchor="middle" class="lbl-dim">service map + trace explorer</text>
+      <text x="1040" y="186" text-anchor="middle" class="lbl-dim">on-call runbook links</text>
+      <text x="1040" y="202" text-anchor="middle" class="lbl-dim">SSO / RBAC per team</text>
+      <path d="M860,65 C 900,90 900,130 930,140" class="flow-m"/>
+      <path d="M860,165 L930,165" class="flow-l"/>
+      <path d="M860,265 C 900,240 900,190 930,190" class="flow-t"/>
+
+      <!-- Alertmanager -->
+      <rect x="660" y="350" width="200" height="90" rx="10" class="box box-a"/>
+      <text x="760" y="376" text-anchor="middle" class="lbl-b">Alertmanager</text>
+      <text x="760" y="394" text-anchor="middle" class="lbl-dim">dedupe · group · route</text>
+      <text x="760" y="410" text-anchor="middle" class="lbl-dim">SLO burn-rate alert rules</text>
+      <text x="760" y="426" text-anchor="middle" class="lbl-dim">silences + inhibition</text>
+      <path d="M760,110 L760,350" class="flow-a"/>
+
+      <!-- Notification channels -->
+      <rect x="930" y="350" width="220" height="90" rx="10" class="box"/>
+      <text x="1040" y="376" text-anchor="middle" class="lbl-b">Notification Channels</text>
+      <text x="1040" y="394" text-anchor="middle" class="lbl-dim">PagerDuty (page on-call)</text>
+      <text x="1040" y="410" text-anchor="middle" class="lbl-dim">Slack #incidents (inform)</text>
+      <text x="1040" y="426" text-anchor="middle" class="lbl-dim">Email digest (weekly)</text>
+      <path d="M860,395 L930,395" class="flow-a"/>
+
+      <!-- SLO layer -->
+      <rect x="280" y="330" width="580" height="90" rx="12" class="box" stroke="#fff" stroke-width="1"/>
+      <text x="300" y="356" class="lbl-b">SLO Definitions (as code, versioned in Git)</text>
+      <text x="300" y="376" class="lbl-dim">availability ≥ 99.9%  ·  p99 latency &lt; 300ms  ·  error rate &lt; 0.5%</text>
+      <text x="300" y="392" class="lbl-dim">multi-window multi-burn-rate alerting (Google SRE style)</text>
+      <text x="300" y="408" class="lbl-dim">reviewed quarterly in error-budget policy</text>
+      <path d="M570,330 L570,300 L760,300 L760,310" class="flow-a"/>
+
+      <!-- Long-term storage -->
+      <rect x="280" y="450" width="580" height="70" rx="12" class="box"/>
+      <text x="300" y="475" class="lbl-b">Object Storage — Amazon S3</text>
+      <text x="300" y="493" class="lbl-dim">Thanos metric blocks · Loki chunks · Tempo traces — single cost-efficient tier</text>
+      <path d="M760,440 L760,470 L860,470" class="flow"/>
+      <path d="M760,210 L1000,450 L860,470" class="flow" opacity="0"/>
+
+      <!-- On-call engineer -->
+      <rect x="930" y="480" width="220" height="70" rx="12" class="box"/>
+      <text x="1040" y="505" text-anchor="middle" class="lbl-b">On-call Engineer</text>
+      <text x="1040" y="523" text-anchor="middle" class="lbl-dim">alert → dashboard → runbook → fix</text>
+      <path d="M1040,440 L1040,480" class="flow-a"/>
+    </svg>
+
+    <div class="legend">
+      <span><i class="dot" style="background:#c6ff5e"></i>metrics path</span>
+      <span><i class="dot" style="background:#63c7ff"></i>logs path</span>
+      <span><i class="dot" style="background:#ff6fae"></i>traces path</span>
+      <span><i class="dot" style="background:#ffcc66"></i>alerting path</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
