@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROJECT 05 — Disaster Recovery & Multi-Region HA</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
@@ -61,6 +62,34 @@
   .metric{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
   .metric .k{font-family:'Sora',sans-serif; color:var(--ok); font-size:22px; font-weight:700;}
   .metric .d{font-size:11.5px; color:var(--dim); margin-top:3px;}
+
+  .board-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .board-scroll svg{min-width:640px;}
+
+  @media (max-width:900px){
+    body{padding:28px 16px 60px;}
+    .kpi-row{grid-template-columns:1fr; gap:12px;}
+    .board{padding:24px 18px; border-radius:14px;}
+  }
+
+  @media (max-width:640px){
+    body{padding:20px 12px 48px;}
+    .eyebrow{font-size:11px; letter-spacing:2px;}
+    h1{font-size:clamp(20px,6vw,28px);}
+    .sub{font-size:12.5px; margin-bottom:24px;}
+    .kpi{padding:14px 16px;}
+    .kpi .label{font-size:10px;}
+    .kpi .val{font-size:20px;}
+    .board{padding:16px 12px;}
+    .board h2{font-size:12px;}
+    .board .cap{font-size:11.5px; margin-bottom:18px;}
+    .board-scroll svg{min-width:820px;}
+    .legend{gap:14px; font-size:10.5px; margin-top:18px;}
+    .strip{grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;}
+    .metric{padding:12px 14px;}
+    .metric .k{font-size:18px;}
+    .metric .d{font-size:10.5px;}
+  }
 </style>
 </head>
 <body>
@@ -79,6 +108,7 @@
     <h2>Active–Passive Region Topology</h2>
     <div class="cap">us-east-1 serves 100% of production traffic. us-west-2 stands warm, continuously replicated, promoted automatically on regional failure.</div>
 
+    <div class="board-scroll">
     <svg viewBox="0 0 1180 700" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2c4262"/></marker>
@@ -178,6 +208,7 @@
       <path d="M280,530 L500,600" class="flow"/>
       <path d="M900,530 L680,600" class="flow"/>
     </svg>
+    </div>
 
     <div class="legend">
       <span><i class="dot" style="background:#3ea6ff"></i>live production traffic</span>
