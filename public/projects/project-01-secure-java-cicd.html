@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROJECT 01 — Secure Java App CI/CD Pipeline on AWS</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
@@ -147,6 +148,36 @@
   }
   .metric .k{font-family:'JetBrains Mono',monospace; color:var(--green); font-size:20px; font-weight:800;}
   .metric .d{font-size:11px; color:var(--dim); margin-top:2px;}
+
+  .board-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .board-scroll svg{min-width:640px;}
+
+  @media (max-width:900px){
+    body{padding:28px 16px 60px;}
+    .board{padding:22px 16px;}
+    .stage{min-width:170px; padding:14px 12px;}
+  }
+
+  @media (max-width:640px){
+    body{padding:22px 12px 48px;}
+    .eyebrow{font-size:11px; letter-spacing:2px;}
+    h1{font-size:clamp(20px,6vw,28px);}
+    .sub{font-size:12px; margin-bottom:24px;}
+    .stage-track{gap:0; margin-bottom:20px; padding-bottom:14px;}
+    .stage{min-width:150px; padding:12px 10px;}
+    .stage h3{font-size:12.5px; margin:5px 0 6px;}
+    .stage p{font-size:11px;}
+    .stage .tool{font-size:10px; padding:2px 7px;}
+    .arrow{min-width:22px; font-size:16px;}
+    .board{padding:16px 12px; border-radius:8px;}
+    .board h2{font-size:12px; margin-bottom:16px;}
+    .board-scroll svg{min-width:760px;}
+    .legend{gap:14px; font-size:10px; margin-top:18px;}
+    .footer-strip{grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;}
+    .metric{padding:12px 12px;}
+    .metric .k{font-size:17px;}
+    .metric .d{font-size:10px;}
+  }
 </style>
 </head>
 <body>
@@ -212,6 +243,7 @@
   <!-- DETAILED SVG DIAGRAM -->
   <div class="board">
     <h2>&gt;_ INFRASTRUCTURE TOPOLOGY</h2>
+    <div class="board-scroll">
     <svg viewBox="0 0 1120 620" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5eff8f"/></marker>
@@ -332,6 +364,7 @@
       <path d="M550,467 L820,467" class="flow-sec" fill="none"/>
 
     </svg>
+    </div>
 
     <div class="legend">
       <span><i class="dot" style="background:#5eff8f"></i>build/deploy flow</span>
